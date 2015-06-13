@@ -1,0 +1,102 @@
+<!-- simple-todos.html -->
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>Upstream Cinema</title>  
+</head>
+
+<body>
+
+
+<header class="page-header">
+  
+
+<nav class="demo-nav">
+  </nav>
+</header>
+
+
+<div>
+{{> loginButtons}}    
+</div>
+
+<div class="demo-wrapper">
+  <header>
+<h1>Movies ({{incompleteCount}})</h1>
+  </header>
+  <div class="notification save-notification">Item Saved</div>
+  <div class="reminder-container">
+      {{#if currentUser}}
+
+    <form id="input-form" class="new-task">
+      <input type="text" id="text" placeholder="IMDB Link"/>
+      <input type="submit" value="Add" />
+    </form>
+        {{/if}}
+
+    <ul class="reminders">
+
+      {{#each tasks}}
+        {{> task}}
+      {{/each}}
+
+    </ul>
+    <footer>
+    </footer>
+</div>
+</div>
+
+</body>
+
+<template name="task">
+
+<li class="new-item">
+	<table border="0">
+		<tr>
+			<td valign="top">
+	<img src="{{Poster}}" width="100px"/>
+</td>
+<td>
+	<strong>
+		<a target="_blank" href="http://www.imdb.com/title/{{imdbID}}/">{{Title}} ({{Year}})</a></strong> -  <i><small>{{Plot}}</small></i><br/>
+		<small><a href="https://www.youtube.com/results?search_query=trailer+movie+{{imdbID}}+{{Year}}+{{Title}}" target="_blank">Trailer</a></small>
+		  </td>
+  <td>
+
+      {{#if currentUser}}
+
+      {{#if canDelete}}
+	<button class="icon-trash delete-button delete" contenteditable="false">		
+	</button>
+	{{/if}}
+	{{#if isVote}}
+	<button class="icon-ok-sign unselect-button unselect" contenteditable="false">
+	</button>
+	{{/if}}
+	{{#if isNotVote}}
+	<button class="icon-film select-button select" contenteditable="false">
+	</button>
+	{{/if}}
+
+	{{/if}}
+	</td>
+		</tr>
+				<tr>
+			<td colspan = "3">
+				<strong>Upstream Votes</strong>:{{counter}}
+				</td>
+			</tr>
+		<tr>
+			<td colspan = "3">
+				<small>
+				Metascore: {{Metascore}} - imdbRating: {{imdbRating}} - tomatoMeter: {{tomatoMeter}} - tomatoRating: {{tomatoRating}} - tomatoUserMeter: {{tomatoUserMeter}} - tomatoUserRating: {{tomatoUserRating}}
+			</small>
+
+			</td>
+		</tr>
+	</table>
+
+</li>
+
+	
+</template>
