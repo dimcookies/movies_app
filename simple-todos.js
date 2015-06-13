@@ -226,7 +226,7 @@ if (Meteor.isServer) {
       if(res.statusCode == 200) {
         dt = res.content;
         img = res.data.responseData.results[0]; 
-        Tasks.update(raceCursor[i]['_id'], { $set: { Poster:  img['tbUrl'] } });
+        Tasks.update(raceCursor[i]['_id'], { $set: { Poster:  img['tbUrl'], photo:"OK" } });
       }
     }
     
