@@ -216,9 +216,11 @@ if (Meteor.isServer) {
     for (var i=0; i<raceCursor.length; i++) {
       img = raceCursor[i]['Poster']
       imdb = raceCursor[i]['imdbID']
+      title = raceCursor[i]['Title']
+      year = raceCursor[i]['Year']
       
 
-      res = Meteor.http.get("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+imdb);
+      res = Meteor.http.get("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=movie+poster+"+title+"+"+year+"+"+imdb);
 
 
       if(res.statusCode == 200) {
