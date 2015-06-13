@@ -7,14 +7,13 @@
 
 <body>
 
-
+<!--
 <header class="page-header">
   
-
 <nav class="demo-nav">
   </nav>
 </header>
-
+-->
 
 <div>
 {{> loginButtons}}    
@@ -22,7 +21,7 @@
 
 <div class="demo-wrapper">
   <header>
-<h1>Movies ({{incompleteCount}})</h1>
+<h1> <img src="logo.png" width="50px" > Movies ({{incompleteCount}})</h1>
   </header>
   <div class="notification save-notification">Item Saved</div>
   <div class="reminder-container">
@@ -53,13 +52,22 @@
 <li class="new-item">
 	<table border="0">
 		<tr>
-			<td valign="top">
-	<img src="{{Poster}}" width="100px"/>
+			<td valign="top" rowspan="2" style="padding-right:10px">
+			<a target="_blank" href="http://www.imdb.com/title/{{imdbID}}/">
+	<img src="{{Poster}}" width="100px" border="0" />
+	</a>
 </td>
-<td>
-	<strong>
-		<a target="_blank" href="http://www.imdb.com/title/{{imdbID}}/">{{Title}} ({{Year}})</a></strong> -  <i><small>{{Plot}}</small></i><br/>
-		<small><a href="https://www.youtube.com/results?search_query=trailer+movie+{{imdbID}}+{{Year}}+{{Title}}" target="_blank">Trailer</a></small>
+<td valign="top">
+	
+		<a target="_blank" href="http://www.imdb.com/title/{{imdbID}}/">
+			<strong>{{Title}} </strong> </a> 
+			<span class="year_type">({{Year}})</span> <br/>  
+			<i><small><span class="bqstart">“&nbsp;</span>{{Plot}}<span class="bqend">&nbsp;”</span> ({{Genre}} - {{Runtime}} )</small></i><br/>
+
+<div class="year_type"><b>Director</b>: {{Director}} - <b>Actors</b>: {{Actors}}
+				</div> 
+
+		<small> <a href="https://www.youtube.com/results?search_query=trailer+movie+{{imdbID}}+{{Year}}+{{Title}}" target="_blank"><b>Trailer</b></a>  </small>
 		  </td>
   <td>
 
@@ -82,18 +90,14 @@
 	</td>
 		</tr>
 				<tr>
-			<td colspan = "3">
-				<strong>Upstream Votes</strong>:{{counter}}
+			<td colspan = "2"><small>
+				<strong>Upstream Votes</strong>: {{counter}}  <span class="year_type">
+				Metascore: {{Metascore}} - imdbRating: {{imdbRating}} - tomatoMeter: {{tomatoMeter}} - tomatoRating: {{tomatoRating}} - tomatoUserMeter: {{tomatoUserMeter}} - tomatoUserRating: {{tomatoUserRating}}
+				</span>
+			</small> 
 				</td>
 			</tr>
-		<tr>
-			<td colspan = "3">
-				<small>
-				Metascore: {{Metascore}} - imdbRating: {{imdbRating}} - tomatoMeter: {{tomatoMeter}} - tomatoRating: {{tomatoRating}} - tomatoUserMeter: {{tomatoUserMeter}} - tomatoUserRating: {{tomatoUserRating}}
-			</small>
-
-			</td>
-		</tr>
+		
 	</table>
 
 </li>
