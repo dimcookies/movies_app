@@ -220,7 +220,7 @@ if (Meteor.isServer) {
       year = raceCursor[i]['Year']
       
 
-      res = Meteor.http.get("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=movie+poster+"+title+"+"+year+"+"+imdb);
+      res = Meteor.http.get("http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=movie+poster+"+title+"+"+year);
 
 
       if(res.statusCode == 200) {
