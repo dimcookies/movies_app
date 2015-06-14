@@ -23,7 +23,8 @@
   <header>
 <h1> <img src="logo.png" width="50px" > Movies ({{incompleteCount}})</h1>
   </header>
-  <div class="notification save-notification">Item Saved</div>
+  <div id="error_div" class="notification undo-button">Item Deleted. Undo?</div>  
+  <div id="ok_div" class="notification save-notification">Item Saved</div>
   <div class="reminder-container">
       {{#if currentUser}}
 
@@ -49,7 +50,7 @@
 
 <template name="task">
 
-<li class="new-item">
+<li class="new-item" style="{{#if isVote}}background-color:#A3FFA3{{/if}};">
 	<table border="0">
 		<tr>
 			<td valign="top" rowspan="2" style="padding-right:10px">

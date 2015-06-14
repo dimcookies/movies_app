@@ -12,8 +12,32 @@ Template.body.events({
 
     var text = event.target.text.value;
 
-    Meteor.call("addTask", text);
+    //Meteor.call("addTask", text);
+    Meteor.call('addTask', text, function(err, data) {
+      //
+      //  alert(err);
+      //alert(data);
 
+      if (data && data.length >0) {
+        t1 = document.getElementById("error_div")
+        t2 = $('.undo-button');
+        t1.innerHTML = data   
+
+        $('.save-notification').hide();
+        t2.show();
+          setTimeout(function(){
+             t2.hide();
+          },10000);
+      } else {
+          t2 = $('.save-notification');
+          $('.undo-button').hide();
+          t2.show();
+          setTimeout(function(){
+             t2.hide();
+          },10000);
+        }
+      
+    });
 
     // Clear form
     event.target.text.value = "";
@@ -55,7 +79,22 @@ Template.task.events({
 Meteor.call("select", this._id, false);
   },
   "click .select": function () {
-  Meteor.call("select", this._id, true);
+  //Meteor.call("select", this._id, true);
+
+ Meteor.call('select', this._id, true, function(err, data) {
+      if (data && data.length >0) {
+        t1 = document.getElementById("error_div")
+        t2 = $('.undo-button');
+        t1.innerHTML = data   
+
+        $('.save-notification').hide();
+        t2.show();
+          setTimeout(function(){
+             t2.hide();
+          },10000);
+      } 
+    });
+
 },
   "click .delete": function () {
 Meteor.call("deleteTask", this._id);
@@ -69,7 +108,7 @@ Accounts.ui.config({
 
 Template.task.helpers({
   canDelete: function () {
-    return this.owner === Meteor.userId() && this.counter < 2;
+    return this.owner === Meteor.userId() && this.counter == 0;
   },
   hasImage: function () {
     return this.photo != 'TEST';
@@ -79,10 +118,10 @@ Template.task.helpers({
     return btoa(unescape(encodeURIComponent(this.photo)));
   },
   isVote: function () {
-    return (this.votes.indexOf(Meteor.user().username) != -1);
+    return Meteor.user() && (this.votes.indexOf(Meteor.user().username) != -1);
   },
   isNotVote: function () {
-    return (this.votes.indexOf(Meteor.user().username) == -1);
+    return Meteor.user() && (this.votes.indexOf(Meteor.user().username) == -1);
   }
 
 });
@@ -93,13 +132,14 @@ Template.task.helpers({
 // At the bottom of simple-todos.js, outside of the client-only block
 Meteor.methods({
   addTask: function (text) {
+
     if (! text) {
-      return false;
+      return "No input";
     }
 
         // Make sure the user is logged in before inserting a task
     if (! Meteor.userId()) {
-      throw new Meteor.Error("not-authorized");
+      return "Please login"
     }
 
     if(text.indexOf("imdb.com/title") != -1) {
@@ -116,9 +156,13 @@ Meteor.methods({
     imdbUrl = "http://www.omdbapi.com/?i=" + text + "&tomatoes=true"
 
     found = Tasks.find({imdbID: text}).count();
-
     if(found > 0) {
-      return false;
+      return "Movie exists";
+    }
+
+    found = Tasks.find({username: Meteor.user().username}).count();
+    if(found>0) {
+      return "Already submited a movie. Delete to replace with a new one"
     }
 
     // server async
@@ -128,8 +172,9 @@ Meteor.methods({
         dt['createdAt'] = new Date();
         dt['owner'] = Meteor.userId();
         dt['username'] = Meteor.user().username;
-        dt['counter'] = 1;
-        dt['votes'] = [Meteor.user().username,];
+        dt['counter'] = 0;
+        //dt['votes'] = [Meteor.user().username,];
+        dt['votes'] = [];        
         dt['photo'] = 'TEST';
 
         
@@ -138,8 +183,8 @@ Meteor.methods({
 
         //var task = Votes.findOne(taskId);
 
-            Meteor.call('ok');
-
+        Meteor.call('ok');
+        //return "";
 
       }
     });
@@ -175,16 +220,25 @@ if (task.owner == Meteor.userId()) {
     var task = Tasks.findOne(taskId);
 
     if (task.owner == Meteor.userId()) {
-      return false;
+      return "Can not vote own movie";
+    }
+
+    if(setChecked) {
+      found = Tasks.find({votes: Meteor.user().username}).count();
+      if(found>0 ) {
+        return "Already voted a movie. Unvote to replace with a new one"
+      }
     }
 
 
     newVotes = task['votes']
     counter = task['counter']
-    if(setChecked) {      
+    if(setChecked) {    
+  
       newVotes.push(Meteor.user().username);
       counter = counter+1;
     } else {
+
       index = newVotes.indexOf(Meteor.user().username);
       if (index > -1) {
         newVotes.splice(index, 1);
