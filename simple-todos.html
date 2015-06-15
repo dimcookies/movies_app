@@ -21,7 +21,26 @@
 
 <div class="demo-wrapper">
   <header>
-<h1> <img src="logo.png" width="50px" > Movies ({{incompleteCount}})</h1>
+<h1> <img src="logo.png" width="50px" > Movies ({{incompleteCount}})</h1> 
+	{{#if voteStatus}}
+	<h3>{{rsvpCount}} people attending
+		      {{#if currentUser}}
+
+		{{#if currentUserRsvp}}
+	        <span style="color:#85E085">(I am attending.&nbsp;&nbsp;</span> 
+	        	<button class="unattend" style="float:None;padding:0px;color:#85E085;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
+	        <span style="color:#85E085">&nbsp;&nbsp;)</span> 
+	    {{else}}
+	        <span style="color:red">(I am not attending.&nbsp;&nbsp;</span> 
+	        	<button class="attend" style="float:None;padding:0px;color:red;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
+	        <span style="color:red">&nbsp;&nbsp;)</span> 
+	    {{/if}}		
+
+
+	      {{/if}}
+
+</h3>{{/if}}
+
   </header>
   <div id="error_div" class="notification undo-button">Item Deleted. Undo?</div>  
   <div id="ok_div" class="notification save-notification">Item Saved</div>
@@ -80,13 +99,16 @@
 	<button class="icon-trash delete-button delete" contenteditable="false">		
 	</button>
 	{{/if}}
+	{{#if currentUserRsvp}}
 	{{#if alreadyVoted}}
 	<button class="icon-ok-sign unselect-button unselect" contenteditable="false">
 	</button>
 	{{/if}}
+
 	{{#if canVote}}
 	<button class="icon-film select-button select" contenteditable="false">
 	</button>
+	{{/if}}
 	{{/if}}
 
 	{{/if}}

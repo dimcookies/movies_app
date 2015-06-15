@@ -1,5 +1,6 @@
 // simple-todos.js
 Tasks = new Mongo.Collection("tasks");
+Rsvp = new Mongo.Collection("rsvp");
 
 if (Meteor.isClient) {
 
@@ -7,6 +8,34 @@ if (Meteor.isClient) {
 
   // Inside the if (Meteor.isClient) block, right after Template.body.helpers:
 Template.body.events({
+
+  "click .unattend": function () {
+    Meteor.call('unattend');
+
+    t1 = document.getElementById("error_div")
+    t2 = $('.undo-button');
+    t1.innerHTML = "Your votes have been reset"   
+
+    $('.save-notification').hide();
+    t2.show();
+      setTimeout(function(){
+         t2.hide();
+      },10000);
+      
+  },  
+  "click .attend": function () {
+    Meteor.call('attend');
+    t1 = document.getElementById("error_div")
+    t2 = $('.undo-button');
+    t1.innerHTML = "Your votes have been reset"   
+
+    $('.save-notification').hide();
+    t2.show();
+      setTimeout(function(){
+         t2.hide();
+      },10000);
+  },
+
   "submit .new-task": function (event) {
     // This function is called when the new task form is submitted
 
@@ -70,6 +99,12 @@ Template.body.helpers({
   incompleteCount: function () {
   return Tasks.find({checked: {$ne: true}}).count();
 },
+rsvpCount: function () {
+  return Rsvp.find({rsvp:1}).count();
+},
+currentUserRsvp: function () {
+  return Meteor.user() && Rsvp.find({username:Meteor.user().username, rsvp:1}).count() == 1;
+},
 voteStatus: function () {
   return voteStatus;
 },
@@ -131,6 +166,9 @@ Template.task.helpers({
   },
   canVote: function () {
     return voteStatus && Meteor.user() && (this.votes.indexOf(Meteor.user().username) == -1) && Meteor.user().username != this.username;
+  },
+  currentUserRsvp: function () {
+  return Meteor.user() && Rsvp.find({username:Meteor.user().username, rsvp:1}).count() == 1;
   }
 
 });
@@ -277,6 +315,18 @@ if (Meteor.isServer) {
       console.log(new Buffer(unencoded || '').toString('base64'));
       return new Buffer(unencoded || '').toString('base64');
     },
+    unattend:function () {
+    Rsvp.update({username:Meteor.user().username}, {username:Meteor.user().username,rsvp:0}, {upsert:true});
+    if(Tasks.find({votes: Meteor.user().username}).count() > 0) {
+      Tasks.update({votes: Meteor.user().username}, {$pull:{'votes':Meteor.user().username}, $inc:{counter:-1} }, {multi:true});  
+    }
+},
+    attend:function () {
+  Rsvp.update({username:Meteor.user().username}, {username:Meteor.user().username,rsvp:1}, {upsert:true});
+    if(Tasks.find({votes: Meteor.user().username}).count() > 0) {
+      Tasks.update({votes: Meteor.user().username}, {$pull:{'votes':Meteor.user().username}, $inc:{counter:-1} }, {multi:true});  
+    }
+},
   ok:function () {
 //console.log("test");
     //res = Meteor.http.get("http://www.imdb.com/title/tt2333784/?ref_=nm_flmg_act_3");
