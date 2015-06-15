@@ -5,6 +5,7 @@ Rsvp = new Mongo.Collection("rsvp");
 if (Meteor.isClient) {
 
   voteStatus = Meteor.settings.public.voteStatus === 'VOTE'
+  lockedStatus = Meteor.settings.public.lockStatus === 'LOCKED'
 
   // Inside the if (Meteor.isClient) block, right after Template.body.helpers:
 Template.body.events({
@@ -108,6 +109,9 @@ currentUserRsvp: function () {
 voteStatus: function () {
   return voteStatus;
 },
+isNotLocked: function () {
+  return (!lockedStatus);
+},
 proposeStatus: function () {
   return !voteStatus;
 }
@@ -169,7 +173,10 @@ Template.task.helpers({
   },
   currentUserRsvp: function () {
   return Meteor.user() && Rsvp.find({username:Meteor.user().username, rsvp:1}).count() == 1;
-  }
+  },
+  isNotLocked: function () {
+  return (!lockedStatus);
+  },
 
 });
 
@@ -307,6 +314,7 @@ if (task.owner == Meteor.userId()) {
 
 if (Meteor.isServer) {
     voteStatus = Meteor.settings.voteStatus === 'VOTE'
+    lockedStatus = Meteor.settings.lockStatus === 'LOCKED'
 
 
   Meteor.methods({

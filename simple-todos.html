@@ -28,11 +28,15 @@
 
 		{{#if currentUserRsvp}}
 	        <span style="color:#85E085">(I am attending.&nbsp;&nbsp;</span> 
+	        {{#if isNotLocked}}
 	        	<button class="unattend" style="float:None;padding:0px;color:#85E085;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
+	        {{/if}}
 	        <span style="color:#85E085">&nbsp;&nbsp;)</span> 
 	    {{else}}
 	        <span style="color:red">(I am not attending.&nbsp;&nbsp;</span> 
+	        {{#if isNotLocked}}
 	        	<button class="attend" style="float:None;padding:0px;color:red;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
+	        {{/if}}
 	        <span style="color:red">&nbsp;&nbsp;)</span> 
 	    {{/if}}		
 
@@ -45,14 +49,16 @@
   <div id="error_div" class="notification undo-button">Item Deleted. Undo?</div>  
   <div id="ok_div" class="notification save-notification">Item Saved</div>
   <div class="reminder-container">
+      {{#if isNotLocked}}
       {{#if currentUser}}
       {{#if proposeStatus}}
-
+      
     <form id="input-form" class="new-task">
       <input type="text" id="text" placeholder="IMDB Link"/>
       <input type="submit" value="Add" />
     </form>
   		{{/if}}  
+        {{/if}}
         {{/if}}
 
     <ul class="reminders">
@@ -93,8 +99,8 @@
 		  </td>
   <td>
 
-      {{#if currentUser}}
-
+{{#if isNotLocked}}
+      {{#if currentUser}}     
       {{#if canDelete}}
 	<button class="icon-trash delete-button delete" contenteditable="false">		
 	</button>
@@ -111,6 +117,7 @@
 	{{/if}}
 	{{/if}}
 
+	{{/if}}
 	{{/if}}
 	</td>
 		</tr>
