@@ -129,7 +129,37 @@
 			</small> 
 				</td>
 			</tr>
-		
+
+			<tr>
+					<td colspan = "2">
+						<a href="#" onClick="document.getElementById('table{{_id}}').className == 'hidden' ?  document.getElementById('table{{_id}}').className = 'shown' : document.getElementById('table{{_id}}').className = 'hidden';return false;">Comments ({{commentsSize}})</a>
+					</td>
+				</tr>	
+			<tr>
+					<td colspan = "2">
+						<table id="table{{_id}}" border=0 width="100%" class="hidden">	
+					{{#each comments}}
+				        <tr>
+							<td colspan = "2"><small><strong>{{this.username}}</strong>:<i>{{this.text}}</i></small>								
+							</td>
+						</tr>
+				      {{/each}}
+	        
+
+					<tr>
+							<td colspan = "2">
+								<form id="comment-form" class="new-comment">
+							      <input style="height:30px" type="text" id="text" placeholder="Comment"/>
+							      <input type="hidden" id="tid" value="{{_id}}"/>
+							      <input style="height:30px; width=60px" type="submit" value="Add" />
+							    </form>
+							</td>
+						</tr>
+			
+						</table>
+
+					</td>
+				</tr>	
 	</table>
 
 </li>

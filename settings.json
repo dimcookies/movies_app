@@ -1,8 +1,8 @@
 {
-  "voteStatus": "VOTE",
+  "voteStatus": "PROPOSE",
   "lockStatus": "UNLOCKED",
   "public": {
-	  "voteStatus": "VOTE",
+	  "voteStatus": "PROPOSE",
 	  "lockStatus": "UNLOCKED"
   }
 }

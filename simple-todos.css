@@ -46,6 +46,10 @@ html, body{
 body{
   background-color: #eee;
 }
+
+.hidden {display:none;}
+.shown {}
+
 .page-header{
   width:100%;
   color:white;

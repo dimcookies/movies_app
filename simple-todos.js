@@ -37,6 +37,16 @@ Template.body.events({
       },10000);
   },
 
+  "submit .new-comment": function (event) {
+    var text = event.target.text.value;    
+    var tid = event.target.tid.value;
+
+    Meteor.call('addComment', tid, text);
+
+    event.target.text.value = "";    
+    return false;
+  },
+
   "submit .new-task": function (event) {
     // This function is called when the new task form is submitted
 
@@ -161,6 +171,9 @@ Template.task.helpers({
   hasImage: function () {
     return this.photo != 'TEST';
   },
+  commentsSize: function () {
+    return this.comments.length;
+  },
   photoBase64: function () {
     //console.log(this.photo.length);
     return btoa(unescape(encodeURIComponent(this.photo)));
@@ -232,6 +245,7 @@ Meteor.methods({
         dt['counter'] = 0;
         //dt['votes'] = [Meteor.user().username,];
         dt['votes'] = [];        
+        dt['comments'] = [];        
         dt['photo'] = 'TEST';
 
         
@@ -335,6 +349,13 @@ if (Meteor.isServer) {
       Tasks.update({votes: Meteor.user().username}, {$pull:{'votes':Meteor.user().username}, $inc:{counter:-1} }, {multi:true});  
     }
 },
+addComment:function (tid, text) {
+  var d = new Date();
+  var n = d.getTime();
+  Tasks.update({'_id': tid}, {$push:{'comments':{'username':Meteor.user().username,'text':text, "cid":n}} }, {multi:false}); 
+},
+
+
   ok:function () {
 //console.log("test");
     //res = Meteor.http.get("http://www.imdb.com/title/tt2333784/?ref_=nm_flmg_act_3");
