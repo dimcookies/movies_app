@@ -1,9 +1,9 @@
 // simple-todos.js
 Tasks = new Mongo.Collection("tasks");
-//Votes = new Mongo.Collection("votes");
 
 if (Meteor.isClient) {
-  
+
+  voteStatus = Meteor.settings.public.voteStatus === 'VOTE'
 
   // Inside the if (Meteor.isClient) block, right after Template.body.helpers:
 Template.body.events({
@@ -69,6 +69,12 @@ Template.body.helpers({
   },
   incompleteCount: function () {
   return Tasks.find({checked: {$ne: true}}).count();
+},
+voteStatus: function () {
+  return voteStatus;
+},
+proposeStatus: function () {
+  return !voteStatus;
 }
 });
 
@@ -108,7 +114,10 @@ Accounts.ui.config({
 
 Template.task.helpers({
   canDelete: function () {
-    return this.owner === Meteor.userId() && this.counter == 0;
+    return this.owner === Meteor.userId() && this.counter == 0 && (!voteStatus);
+  },
+  canPropose: function () {
+    return (!voteStatus);
   },
   hasImage: function () {
     return this.photo != 'TEST';
@@ -117,11 +126,11 @@ Template.task.helpers({
     //console.log(this.photo.length);
     return btoa(unescape(encodeURIComponent(this.photo)));
   },
-  isVote: function () {
-    return Meteor.user() && (this.votes.indexOf(Meteor.user().username) != -1);
+  alreadyVoted: function () {
+    return voteStatus && Meteor.user() && (this.votes.indexOf(Meteor.user().username) != -1);
   },
-  isNotVote: function () {
-    return Meteor.user() && (this.votes.indexOf(Meteor.user().username) == -1);
+  canVote: function () {
+    return voteStatus && Meteor.user() && (this.votes.indexOf(Meteor.user().username) == -1) && Meteor.user().username != this.username;
   }
 
 });
@@ -132,6 +141,9 @@ Template.task.helpers({
 // At the bottom of simple-todos.js, outside of the client-only block
 Meteor.methods({
   addTask: function (text) {
+    if(voteStatus) {
+      return "You are cheatting...";
+    }
 
     if (! text) {
       return "No input";
@@ -219,6 +231,10 @@ if (task.owner == Meteor.userId()) {
   select: function (taskId, setChecked) {
     var task = Tasks.findOne(taskId);
 
+    if(!voteStatus) {
+      return "You are cheatting...";
+    }
+
     if (task.owner == Meteor.userId()) {
       return "Can not vote own movie";
     }
@@ -252,7 +268,9 @@ if (task.owner == Meteor.userId()) {
 
 
 if (Meteor.isServer) {
-  
+    voteStatus = Meteor.settings.voteStatus === 'VOTE'
+
+
   Meteor.methods({
     'base64Encode':function(unencoded) {
       console.log(unencoded);

@@ -27,11 +27,13 @@
   <div id="ok_div" class="notification save-notification">Item Saved</div>
   <div class="reminder-container">
       {{#if currentUser}}
+      {{#if proposeStatus}}
 
     <form id="input-form" class="new-task">
       <input type="text" id="text" placeholder="IMDB Link"/>
       <input type="submit" value="Add" />
     </form>
+  		{{/if}}  
         {{/if}}
 
     <ul class="reminders">
@@ -50,7 +52,7 @@
 
 <template name="task">
 
-<li class="new-item" style="{{#if isVote}}background-color:#A3FFA3{{/if}};">
+<li class="new-item" style="{{#if alreadyVoted}}background-color:#A3FFA3{{/if}};">
 	<table border="0">
 		<tr>
 			<td valign="top" rowspan="2" style="padding-right:10px">
@@ -78,11 +80,11 @@
 	<button class="icon-trash delete-button delete" contenteditable="false">		
 	</button>
 	{{/if}}
-	{{#if isVote}}
+	{{#if alreadyVoted}}
 	<button class="icon-ok-sign unselect-button unselect" contenteditable="false">
 	</button>
 	{{/if}}
-	{{#if isNotVote}}
+	{{#if canVote}}
 	<button class="icon-film select-button select" contenteditable="false">
 	</button>
 	{{/if}}

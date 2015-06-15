@@ -1,6 +1,6 @@
 {
-  "voteStatus": "VOTE",
+  "voteStatus": "PROPOSE",
   "public": {
-	  "voteStatus": "VOTE"
+	  "voteStatus": "PROPOSE"
   }
 }
