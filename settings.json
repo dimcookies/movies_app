@@ -3,6 +3,8 @@
   "lockStatus": "UNLOCKED",
   "public": {
 	  "voteStatus": "PROPOSE",
-	  "lockStatus": "UNLOCKED"
+	  "lockStatus": "UNLOCKED",
+  	  "countdownText": "Time left for suggestions",
+  	  "countdownDate": "2015, 5, 19, 23, 59, 59, 0"
   }
 }

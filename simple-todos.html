@@ -33,19 +33,65 @@
 	        {{/if}}
 	        <span style="color:#85E085">&nbsp;&nbsp;)</span> 
 	    {{else}}
-	        <span style="color:red">(I am not attending.&nbsp;&nbsp;</span> 
+	        <span style="color:#9A3334">(I am not attending.&nbsp;&nbsp;</span> 
 	        {{#if isNotLocked}}
-	        	<button class="attend" style="float:None;padding:0px;color:red;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
+	        	<button class="attend" style="float:None;padding:0px;color:#9A3334;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
 	        {{/if}}
-	        <span style="color:red">&nbsp;&nbsp;)</span> 
+	        <span style="color:#9A3334">&nbsp;&nbsp;)</span> 
 	    {{/if}}		
 
 
 	      {{/if}}
 
 </h3>{{/if}}
+<h3>{{countdownText}}:&nbsp;&nbsp;<span style="color:#9A3334" class="countdown" id="countdown"></span></h3>
+
+<script>
+var end = new Date({{countdownDate}});
+    var _second = 1000;
+    var _minute = _second * 60;
+    var _hour = _minute * 60;
+    var _day = _hour * 24;
+    var timer;
+
+    function showRemaining() {
+        var now = new Date();
+        var distance = end - now;
+        if (0 > distance) {
+            clearInterval(timer);
+            document.getElementById('countdown').innerHTML = 'EXPIRED!';
+            return;
+        }
+        var days = Math.floor(distance / _day);
+        var hours = Math.floor((distance % _day) / _hour);
+        if(10 > hours) {
+        	hours = "0" + hours;
+        }
+        var minutes = Math.floor((distance % _hour) / _minute);
+        if(10 > minutes) {
+        	minutes = "0" + minutes;
+        }
+        var seconds = Math.floor((distance % _minute) / _second);
+		if(10 > seconds) {
+        	seconds = "0" + seconds;
+        }        
+
+        document.getElementById('countdown').innerHTML = days + 'days ';
+        document.getElementById('countdown').innerHTML += hours + 'hrs ';
+        document.getElementById('countdown').innerHTML += minutes + 'mins ';
+        document.getElementById('countdown').innerHTML += seconds + 'secs';
+    }
+
+    timer = setInterval(showRemaining, 1000);
+</script>
 
   </header>
+
+
+
+
+<div id="countdown"></div>
+
   <div id="error_div" class="notification undo-button">Item Deleted. Undo?</div>  
   <div id="ok_div" class="notification save-notification">Item Saved</div>
   <div class="reminder-container">

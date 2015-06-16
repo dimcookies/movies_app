@@ -4,8 +4,10 @@ Rsvp = new Mongo.Collection("rsvp");
 
 if (Meteor.isClient) {
 
-  voteStatus = Meteor.settings.public.voteStatus === 'VOTE'
-  lockedStatus = Meteor.settings.public.lockStatus === 'LOCKED'
+  voteStatus = Meteor.settings.public.voteStatus === 'VOTE';
+  lockedStatus = Meteor.settings.public.lockStatus === 'LOCKED';
+  countdownText = Meteor.settings.public.countdownText;
+  countdownDate = Meteor.settings.public.countdownDate;
 
   // Inside the if (Meteor.isClient) block, right after Template.body.helpers:
 Template.body.events({
@@ -124,6 +126,12 @@ isNotLocked: function () {
 },
 proposeStatus: function () {
   return !voteStatus;
+},
+countdownText: function () {
+  return countdownText;
+},
+countdownDate: function () {
+  return countdownDate;
 }
 });
 
