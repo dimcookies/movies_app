@@ -6,19 +6,23 @@
 </head>
 
 <body>
-
-<!--
+{{> loginButtons}}
 <header class="page-header">
+	
   
+
 <nav class="demo-nav">
+	<ul>
+      <li><a href="#" class="home" style="color:white;border-bottom:2px"><strong>Home</strong></a></li>
+      <li><a href="#" class="history" style="color:white;border-bottom:2px"><strong>History</strong></a></li>
+     </ul>
   </nav>
 </header>
--->
 
-<div>
-{{> loginButtons}}    
-</div>
+{{> Template.dynamic template=template_name }}
 
+</body>
+<template name="home">
 <div class="demo-wrapper">
   <header>
 <h1> <img src="logo.png" width="50px" > Movies ({{incompleteCount}})</h1> 
@@ -57,6 +61,10 @@ var end = new Date({{countdownDate}});
     function showRemaining() {
         var now = new Date();
         var distance = end - now;
+        if(! document.getElementById('countdown')) {
+        	clearInterval(timer);
+        	return;
+        }
         if (0 > distance) {
             clearInterval(timer);
             document.getElementById('countdown').innerHTML = 'EXPIRED!';
@@ -91,7 +99,7 @@ var end = new Date({{countdownDate}});
 
 
 <div id="countdown"></div>
-
+<br/><br/>
   <div id="error_div" class="notification undo-button">Item Deleted. Undo?</div>  
   <div id="ok_div" class="notification save-notification">Item Saved</div>
   <div class="reminder-container">
@@ -129,8 +137,43 @@ var end = new Date({{countdownDate}});
     </footer>
 </div>
 </div>
+</template>
 
-</body>
+
+
+<template name="history">
+
+<div class="demo-wrapper">
+  <header>
+<h1> <img src="logo.png" width="50px" > Movies History ({{incompleteCount}})</h1> 
+<strong><a href="#" class="prevWeek" style="color:white;text-decoration:underline">&lt;Previous week</a> {{weekFrom}} - {{weekTo}} 
+	<a href="#" class="nextWeek" style="color:white;text-decoration:underline">Next week&gt;</a></strong>
+  </header>
+
+  <div class="reminder-container">
+<table>
+	<tr>
+        <td>
+		  {{#each tasks}}
+			{{> taskLink}}
+	      {{/each}}
+      </td>
+</tr>
+
+</table>
+    <ul class="reminders">
+
+      {{#each tasks}}
+        {{> task}}
+      {{/each}}
+
+    </ul>
+    <footer>
+    </footer>
+</div>
+</div>
+
+</template>	
 
 <template name="taskLink">
 	<div class="item">
@@ -157,7 +200,7 @@ var end = new Date({{countdownDate}});
 	
 		<a target="_blank" href="http://www.imdb.com/title/{{imdbID}}/">
 			<strong>{{Title}} </strong> </a> 
-			<span class="year_type">({{Year}})</span> <br/>  
+			<span class="year_type">({{Year}})</span> {{#if isHistory}}<small> by {{username}}</small> {{/if}}<br/>  
 			<i><small><span class="bqstart">“&nbsp;</span>{{Plot}}<span class="bqend">&nbsp;”</span> ({{Genre}} - {{Runtime}} )</small></i><br/>
 
 <div class="year_type"><b>Director</b>: {{Director}} - <b>Actors</b>: {{Actors}}
@@ -191,7 +234,9 @@ var end = new Date({{countdownDate}});
 		</tr>
 				<tr>
 			<td colspan = "2"><small>
-				<strong>Upstream Votes</strong>: {{counter}}  <span class="year_type">
+				<strong>Upstream Votes</strong>: {{counter}} 
+				{{#if isHistory}} ({{votes}}) {{/if}}
+				 <span class="year_type">
 				Metascore: {{Metascore}}/100 - imdbRating: {{imdbRating}}/10 - tomatoMeter: {{tomatoMeter}}% - tomatoRating: {{tomatoRating}}/10 - tomatoUserMeter: {{tomatoUserMeter}}% - tomatoUserRating: {{tomatoUserRating}}/5
 				</span>
 			</small> 
