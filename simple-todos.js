@@ -100,10 +100,10 @@ Template.body.helpers({
   tasks: function () {
     if (Session.get("hideCompleted")) {
       // If hide completed is checked, filter tasks
-      return Tasks.find({checked: {$ne: true}}, {sort: {counter: -1}});
+      return Tasks.find({checked: {$ne: true}}, {sort: {Title: 1}});
     } else {
       // Otherwise, return all of the tasks
-      return Tasks.find({}, {sort: {counter: -1}});
+      return Tasks.find({}, {sort: {Title: 1}});
     }
   },
   hideCompleted: function () {

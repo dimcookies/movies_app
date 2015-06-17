@@ -47,6 +47,18 @@ body{
   background-color: #eee;
 }
 
+div.item {
+    vertical-align: top;
+    display: inline-block;
+    text-align: center;
+    max-width: 100px;
+}
+
+.caption {
+    display: block;
+    color:white;
+}
+
 .hidden {display:none;}
 .shown {}
 

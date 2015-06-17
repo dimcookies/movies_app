@@ -107,6 +107,17 @@ var end = new Date({{countdownDate}});
         {{/if}}
         {{/if}}
 
+        <br/><br/>
+<table>
+	<tr>
+        <td>
+		  {{#each tasks}}
+			{{> taskLink}}
+	      {{/each}}
+      </td>
+</tr>
+
+</table>
     <ul class="reminders">
 
       {{#each tasks}}
@@ -121,9 +132,20 @@ var end = new Date({{countdownDate}});
 
 </body>
 
+<template name="taskLink">
+	<div class="item">
+		<a href="#{{imdbID}}">
+			<img src="{{Poster}}" width="100px" border="0" />
+			<span class="caption">{{Title}}</span>
+		</a>	    
+	</div>
+	
+</template>
+
 <template name="task">
 
 <li class="new-item" style="{{#if alreadyVoted}}background-color:#A3FFA3{{/if}};">
+	<a name="{{imdbID}}"></a>
 	<table border="0">
 		<tr>
 			<td valign="top" rowspan="2" style="padding-right:10px">
