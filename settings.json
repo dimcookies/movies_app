@@ -5,6 +5,8 @@
 	  "voteStatus": "PROPOSE",
 	  "lockStatus": "UNLOCKED",
   	  "countdownText": "Time left for suggestions",
-  	  "countdownDate": "2015, 5, 19, 23, 59, 59, 0"
+  	  "countdownDate": "2015, 5, 19, 23, 59, 59, 0",
+  	  "weekFrom": "2015, 6, 8",
+  	  "weekTo": "2015, 6, 14"
   }
 }

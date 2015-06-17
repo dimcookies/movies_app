@@ -1,6 +1,8 @@
 // simple-todos.js
 Tasks = new Mongo.Collection("tasks");
+TasksHistory = new Mongo.Collection("tasks_history");
 Rsvp = new Mongo.Collection("rsvp");
+
 
 if (Meteor.isClient) {
 
@@ -8,9 +10,54 @@ if (Meteor.isClient) {
   lockedStatus = Meteor.settings.public.lockStatus === 'LOCKED';
   countdownText = Meteor.settings.public.countdownText;
   countdownDate = Meteor.settings.public.countdownDate;
+  isHistory = false;
+  weekFrom = new Date(Meteor.settings.public.weekFrom);
+  weekTo = new Date(Meteor.settings.public.weekTo);
+
+  var newChattersDep = new Tracker.Dependency();
+
 
   // Inside the if (Meteor.isClient) block, right after Template.body.helpers:
+Template.history.events({
+    "click .prevWeek": function() {
+      weekFrom.setDate(weekFrom.getDate()-7);      
+      weekTo.setDate(weekTo.getDate()-7);      
+      //console.log(weekFrom);
+      //console.log(weekTo);
+      newChattersDep.changed();
+    },
+    "click .nextWeek": function() {
+      weekFrom.setDate(weekFrom.getDate()+7);      
+      weekTo.setDate(weekTo.getDate()+7);      
+      //console.log(weekFrom);
+      //console.log(weekTo);
+      newChattersDep.changed();
+    },
+
+  "submit .new-comment": function (event) {
+    var text = event.target.text.value;    
+    var tid = event.target.tid.value;
+
+    Meteor.call('addCommentHistory', tid, text);
+
+    event.target.text.value = "";    
+    return false;
+  }
+});
 Template.body.events({
+
+  "click .home": function() {
+    isHistory = false;
+    Session.set("templateName", "home");
+  },
+  "click .history": function() {
+      isHistory = true;
+     Session.set("templateName", "history");
+  }
+});
+
+
+Template.home.events({
 
   "click .unattend": function () {
     Meteor.call('unattend');
@@ -97,6 +144,43 @@ Template.body.events({
 
 // Replace the existing Template.body.helpers
 Template.body.helpers({
+  template_name: function(){
+    return Session.get("templateName") ? Session.get("templateName") : 'home';
+  } 
+  });
+
+  
+
+Template.history.helpers({
+  tasks: function () {
+  
+      //var today = new Date();
+      //var lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6);
+      newChattersDep.depend();
+      //console.log("reloadTasks");
+      //console.log(weekFrom);
+      //console.log(weekTo);      
+        
+      return TasksHistory.find({createdAt:{$gt:weekFrom, $lt:weekTo}}, {sort: {counter: -1}});
+  },
+  incompleteCount: function () {
+    newChattersDep.depend();
+    return TasksHistory.find({createdAt:{$gt:weekFrom, $lt:weekTo}}, {sort: {counter: -1}}).count();    
+  },
+  isHistory: function () {
+    return true;
+  },
+  weekFrom: function () {
+    newChattersDep.depend();
+    return weekFrom.getDate() + '/' + (weekFrom.getMonth() + 1) + '/' + weekFrom.getFullYear();
+  },
+  weekTo: function () {
+    newChattersDep.depend();    
+    return weekTo.getDate() + '/' + (weekTo.getMonth() + 1) + '/' + weekTo.getFullYear();
+  },
+});
+
+Template.home.helpers({
   tasks: function () {
     if (Session.get("hideCompleted")) {
       // If hide completed is checked, filter tasks
@@ -105,6 +189,9 @@ Template.body.helpers({
       // Otherwise, return all of the tasks
       return Tasks.find({}, {sort: {Title: 1}});
     }
+  },
+  isHistory: function () {
+    return false;
   },
   hideCompleted: function () {
     return Session.get("hideCompleted");
@@ -197,6 +284,9 @@ Template.task.helpers({
   },
   isNotLocked: function () {
   return (!lockedStatus);
+  },
+  isHistory: function () {
+  return isHistory;
   },
 
 });
@@ -361,6 +451,12 @@ addComment:function (tid, text) {
   var d = new Date();
   var n = d.getTime();
   Tasks.update({'_id': tid}, {$push:{'comments':{'username':Meteor.user().username,'text':text, "cid":n}} }, {multi:false}); 
+},
+
+addCommentHistory:function (tid, text) {
+  var d = new Date();
+  var n = d.getTime();
+  TasksHistory.update({'_id': tid}, {$push:{'comments':{'username':Meteor.user().username,'text':text, "cid":n}} }, {multi:false}); 
 },
 
 
