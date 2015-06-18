@@ -14,19 +14,19 @@ if (Meteor.isClient) {
   weekFrom = new Date(Meteor.settings.public.weekFrom);
   weekTo = new Date(Meteor.settings.public.weekTo);
 
-  var newChattersDep = new Tracker.Dependency();
+  var historyDatesDep = new Tracker.Dependency();
 
 
   Template.history.events({
       "click .prevWeek": function() {
         weekFrom.setDate(weekFrom.getDate()-7);      
         weekTo.setDate(weekTo.getDate()-7);      
-        newChattersDep.changed();
+        historyDatesDep.changed();
       },
       "click .nextWeek": function() {
         weekFrom.setDate(weekFrom.getDate()+7);      
         weekTo.setDate(weekTo.getDate()+7);      
-        newChattersDep.changed();
+        historyDatesDep.changed();
       },
 
     "submit .new-comment": function (event) {
@@ -135,22 +135,22 @@ if (Meteor.isClient) {
 
   Template.history.helpers({
     movies: function () {
-        newChattersDep.depend();        
+        historyDatesDep.depend();        
         return MoviesHistory.find({createdAt:{$gt:weekFrom, $lt:weekTo}}, {sort: {counter: -1}});
     },
     moviesCount: function () {
-      newChattersDep.depend();
+      historyDatesDep.depend();
       return MoviesHistory.find({createdAt:{$gt:weekFrom, $lt:weekTo}}, {sort: {counter: -1}}).count();    
     },
     isHistory: function () {
       return true;
     },
     weekFrom: function () {
-      newChattersDep.depend();
+      historyDatesDep.depend();
       return weekFrom.getDate() + '/' + (weekFrom.getMonth() + 1) + '/' + weekFrom.getFullYear();
     },
     weekTo: function () {
-      newChattersDep.depend();    
+      historyDatesDep.depend();    
       return weekTo.getDate() + '/' + (weekTo.getMonth() + 1) + '/' + weekTo.getFullYear();
     },
   });
