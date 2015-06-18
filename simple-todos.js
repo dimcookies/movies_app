@@ -267,7 +267,7 @@ Template.task.helpers({
     return this.photo != 'TEST';
   },
   commentsSize: function () {
-    return this.comments.length;
+    return this.comments?this.comments.length:0;
   },
   photoBase64: function () {
     //console.log(this.photo.length);
