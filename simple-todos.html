@@ -22,171 +22,169 @@
 {{> Template.dynamic template=template_name }}
 
 </body>
+
+
+
 <template name="home">
-<div class="demo-wrapper">
-  <header>
-<h1> <img src="logo.png" width="50px" > Movies ({{incompleteCount}})</h1> 
-	{{#if voteStatus}}
-	<h3>{{rsvpCount}} people attending
-		      {{#if currentUser}}
+	<div class="demo-wrapper">
+	  <header>
+	<h1> <img src="logo.png" width="50px" > Movies ({{moviesCount}})</h1> 
+		{{#if voteStatus}}
+		<h3>{{rsvpCount}} people attending
+			      {{#if currentUser}}
 
-		{{#if currentUserRsvp}}
-	        <span style="color:#85E085">(I am attending.&nbsp;&nbsp;</span> 
-	        {{#if isNotLocked}}
-	        	<button class="unattend" style="float:None;padding:0px;color:#85E085;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
+			{{#if currentUserRsvp}}
+		        <span style="color:#85E085">(I am attending.&nbsp;&nbsp;</span> 
+		        {{#if isNotLocked}}
+		        	<button class="unattend" style="float:None;padding:0px;color:#85E085;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
+		        {{/if}}
+		        <span style="color:#85E085">&nbsp;&nbsp;)</span> 
+		    {{else}}
+		        <span style="color:#9A3334">(I am not attending.&nbsp;&nbsp;</span> 
+		        {{#if isNotLocked}}
+		        	<button class="attend" style="float:None;padding:0px;color:#9A3334;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
+		        {{/if}}
+		        <span style="color:#9A3334">&nbsp;&nbsp;)</span> 
+		    {{/if}}		
+
+
+		      {{/if}}
+
+	</h3>{{/if}}
+	<h3>{{countdownText}}:&nbsp;&nbsp;<span style="color:#9A3334" class="countdown" id="countdown"></span></h3>
+
+	<script>
+	var end = new Date({{countdownDate}});
+	    var _second = 1000;
+	    var _minute = _second * 60;
+	    var _hour = _minute * 60;
+	    var _day = _hour * 24;
+	    var timer;
+
+	    function showRemaining() {
+	        var now = new Date();
+	        var distance = end - now;
+	        if(! document.getElementById('countdown')) {
+	        	clearInterval(timer);
+	        	return;
+	        }
+	        if (0 > distance) {
+	            clearInterval(timer);
+	            document.getElementById('countdown').innerHTML = 'EXPIRED!';
+	            return;
+	        }
+	        var days = Math.floor(distance / _day);
+	        var hours = Math.floor((distance % _day) / _hour);
+	        if(10 > hours) {
+	        	hours = "0" + hours;
+	        }
+	        var minutes = Math.floor((distance % _hour) / _minute);
+	        if(10 > minutes) {
+	        	minutes = "0" + minutes;
+	        }
+	        var seconds = Math.floor((distance % _minute) / _second);
+			if(10 > seconds) {
+	        	seconds = "0" + seconds;
+	        }        
+
+	        document.getElementById('countdown').innerHTML = days + 'days ';
+	        document.getElementById('countdown').innerHTML += hours + 'hrs ';
+	        document.getElementById('countdown').innerHTML += minutes + 'mins ';
+	        document.getElementById('countdown').innerHTML += seconds + 'secs';
+	    }
+
+	    timer = setInterval(showRemaining, 1000);
+	</script>
+
+	  </header>
+
+	<div id="countdown"></div>
+	<br/><br/>
+	  <div id="error_div" class="notification undo-button">Item Deleted. Undo?</div>  
+	  <div id="ok_div" class="notification save-notification">Item Saved</div>
+	  <div class="reminder-container">
+	      {{#if isNotLocked}}
+	      {{#if currentUser}}
+	      {{#if proposeStatus}}
+	      
+		    <form id="input-form" class="new-movie">
+		      <input type="text" id="text" placeholder="IMDB Link"/>
+		      <input type="submit" value="Add" />
+		    </form>
+	  		{{/if}}  
 	        {{/if}}
-	        <span style="color:#85E085">&nbsp;&nbsp;)</span> 
-	    {{else}}
-	        <span style="color:#9A3334">(I am not attending.&nbsp;&nbsp;</span> 
-	        {{#if isNotLocked}}
-	        	<button class="attend" style="float:None;padding:0px;color:#9A3334;border:1px;text-decoration: underline;" contenteditable="false">Change</button>
 	        {{/if}}
-	        <span style="color:#9A3334">&nbsp;&nbsp;)</span> 
-	    {{/if}}		
 
+		        <br/><br/>
+			<table>
+				<tr>
+			        <td>
+					  {{#each movies}}
+						{{> movieLink}}
+				      {{/each}}
+			      </td>
+			</tr>
 
-	      {{/if}}
+			</table>
+		    <ul class="reminders">
 
-</h3>{{/if}}
-<h3>{{countdownText}}:&nbsp;&nbsp;<span style="color:#9A3334" class="countdown" id="countdown"></span></h3>
+		      {{#each movies}}
+		        {{> movie}}
+		      {{/each}}
 
-<script>
-var end = new Date({{countdownDate}});
-    var _second = 1000;
-    var _minute = _second * 60;
-    var _hour = _minute * 60;
-    var _day = _hour * 24;
-    var timer;
-
-    function showRemaining() {
-        var now = new Date();
-        var distance = end - now;
-        if(! document.getElementById('countdown')) {
-        	clearInterval(timer);
-        	return;
-        }
-        if (0 > distance) {
-            clearInterval(timer);
-            document.getElementById('countdown').innerHTML = 'EXPIRED!';
-            return;
-        }
-        var days = Math.floor(distance / _day);
-        var hours = Math.floor((distance % _day) / _hour);
-        if(10 > hours) {
-        	hours = "0" + hours;
-        }
-        var minutes = Math.floor((distance % _hour) / _minute);
-        if(10 > minutes) {
-        	minutes = "0" + minutes;
-        }
-        var seconds = Math.floor((distance % _minute) / _second);
-		if(10 > seconds) {
-        	seconds = "0" + seconds;
-        }        
-
-        document.getElementById('countdown').innerHTML = days + 'days ';
-        document.getElementById('countdown').innerHTML += hours + 'hrs ';
-        document.getElementById('countdown').innerHTML += minutes + 'mins ';
-        document.getElementById('countdown').innerHTML += seconds + 'secs';
-    }
-
-    timer = setInterval(showRemaining, 1000);
-</script>
-
-  </header>
-
-
-
-
-<div id="countdown"></div>
-<br/><br/>
-  <div id="error_div" class="notification undo-button">Item Deleted. Undo?</div>  
-  <div id="ok_div" class="notification save-notification">Item Saved</div>
-  <div class="reminder-container">
-      {{#if isNotLocked}}
-      {{#if currentUser}}
-      {{#if proposeStatus}}
-      
-    <form id="input-form" class="new-task">
-      <input type="text" id="text" placeholder="IMDB Link"/>
-      <input type="submit" value="Add" />
-    </form>
-  		{{/if}}  
-        {{/if}}
-        {{/if}}
-
-        <br/><br/>
-<table>
-	<tr>
-        <td>
-		  {{#each tasks}}
-			{{> taskLink}}
-	      {{/each}}
-      </td>
-</tr>
-
-</table>
-    <ul class="reminders">
-
-      {{#each tasks}}
-        {{> task}}
-      {{/each}}
-
-    </ul>
-    <footer>
-    </footer>
-</div>
-</div>
+		    </ul>
+		    <footer>
+		    </footer>
+		</div>
+	</div>
 </template>
 
 
 
 <template name="history">
+	<div class="demo-wrapper">
+	  <header>
+	<h1> <img src="logo.png" width="50px" > Movies History ({{moviesCount}})</h1> 
+	<strong><a href="#" class="prevWeek" style="color:white;text-decoration:underline">&lt;Previous week</a> {{weekFrom}} - {{weekTo}} 
+		<a href="#" class="nextWeek" style="color:white;text-decoration:underline">Next week&gt;</a></strong>
+	  </header>
 
-<div class="demo-wrapper">
-  <header>
-<h1> <img src="logo.png" width="50px" > Movies History ({{incompleteCount}})</h1> 
-<strong><a href="#" class="prevWeek" style="color:white;text-decoration:underline">&lt;Previous week</a> {{weekFrom}} - {{weekTo}} 
-	<a href="#" class="nextWeek" style="color:white;text-decoration:underline">Next week&gt;</a></strong>
-  </header>
+	  <div class="reminder-container">
+		<table>
+			<tr>
+		        <td>
+				  {{#each movies}}
+					{{> movieLink}}
+			      {{/each}}
+		      </td>
+		</tr>
 
-  <div class="reminder-container">
-<table>
-	<tr>
-        <td>
-		  {{#each tasks}}
-			{{> taskLink}}
-	      {{/each}}
-      </td>
-</tr>
-
-</table>
-    <ul class="reminders">
-
-      {{#each tasks}}
-        {{> task}}
-      {{/each}}
-
-    </ul>
-    <footer>
-    </footer>
-</div>
-</div>
-
+		</table>
+		    <ul class="reminders">
+		      {{#each movies}}
+		        {{> movie}}
+		      {{/each}}
+		    </ul>
+		    <footer>
+		    </footer>
+		</div>
+	</div>
 </template>	
 
-<template name="taskLink">
+
+
+<template name="movieLink">
 	<div class="item">
 		<a href="#{{imdbID}}">
 			<img src="{{Poster}}" width="100px" border="0" style="max-width:100px;max-height:155px" />
 			<span class="caption">{{Title}}</span>
 		</a>	    
-	</div>
-	
+	</div>	
 </template>
 
-<template name="task">
 
+
+<template name="movie">
 <li class="new-item" style="{{#if alreadyVoted}}background-color:#A3FFA3{{/if}};">
 	<a name="{{imdbID}}"></a>
 	<table border="0">
@@ -210,26 +208,27 @@ var end = new Date({{countdownDate}});
 		  </td>
   <td>
 
-{{#if isNotLocked}}
-      {{#if currentUser}}     
-      {{#if canDelete}}
-	<button class="icon-trash delete-button delete" contenteditable="false">		
-	</button>
-	{{/if}}
-	{{#if currentUserRsvp}}
-	{{#if alreadyVoted}}
-	<button class="icon-ok-sign unselect-button unselect" contenteditable="false">
-	</button>
-	{{/if}}
+		{{#if isNotLocked}}
+		    {{#if currentUser}}     
+			    {{#unless isHistory}}
+				    {{#if canDelete}}	     
+						<button class="icon-trash delete-button delete" contenteditable="false">		
+						</button>
+					{{/if}}
+					{{#if currentUserRsvp}}
+						{{#if alreadyVoted}}
+							<button class="icon-ok-sign unselect-button unselect" contenteditable="false">
+							</button>
+						{{/if}}
 
-	{{#if canVote}}
-	<button class="icon-film select-button select" contenteditable="false">
-	</button>
-	{{/if}}
-	{{/if}}
-
-	{{/if}}
-	{{/if}}
+						{{#if canVote}}
+							<button class="icon-film select-button select" contenteditable="false">
+							</button>
+						{{/if}}		
+					{{/if}}
+				{{/unless}}
+			{{/if}}
+		{{/if}}
 	</td>
 		</tr>
 				<tr>
@@ -274,8 +273,5 @@ var end = new Date({{countdownDate}});
 					</td>
 				</tr>	
 	</table>
-
 </li>
-
-	
 </template>
