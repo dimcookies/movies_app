@@ -168,7 +168,7 @@ if (Meteor.isClient) {
       return Session.get("hideCompleted");
     },
     moviesCount: function () {
-      return Movies.find({checked: {$ne: true}}).count();
+      return Movies.find({}).count();
     },
     rsvpCount: function () {
       return Rsvp.find({rsvp:1}).count();
@@ -339,11 +339,9 @@ Meteor.methods({
     newVotes = movie['votes']
     counter = movie['counter']
     if(setChecked) {    
-  
       newVotes.push(Meteor.user().username);
       counter = counter+1;
     } else {
-
       index = newVotes.indexOf(Meteor.user().username);
       if (index > -1) {
         newVotes.splice(index, 1);
