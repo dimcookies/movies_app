@@ -1,11 +1,11 @@
 {
-  "voteStatus": "PROPOSE",
+  "voteStatus": "VOTE",
   "lockStatus": "UNLOCKED",
   "public": {
-	  "voteStatus": "PROPOSE",
+	  "voteStatus": "VOTE",
 	  "lockStatus": "UNLOCKED",
-  	  "countdownText": "Time left for suggestions",
-  	  "countdownDate": "2015, 5, 19, 23, 59, 59, 0",
+  	  "countdownText": "Time left for voting",
+  	  "countdownDate": "2015, 5, 22, 17, 00, 00, 0",
   	  "weekFrom": "2015, 6, 9",
   	  "weekTo": "2015, 6, 16"
   }

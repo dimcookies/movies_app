@@ -240,6 +240,9 @@ if (Meteor.isClient) {
     alreadyVoted: function () {
       return voteStatus && Meteor.user() && (this.votes.indexOf(Meteor.user().username) != -1);
     },
+    hasVoted: function () {
+      return (isHistory || voteStatus) && Meteor.user() && (this.votes.indexOf(Meteor.user().username) != -1);
+    },
     canVote: function () {
       return voteStatus && Meteor.user() && (this.votes.indexOf(Meteor.user().username) == -1) && Meteor.user().username != this.username;
     },
