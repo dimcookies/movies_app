@@ -159,7 +159,12 @@ if (Meteor.isClient) {
 
   Template.home.helpers({
     movies: function () {
-      return Movies.find({}, {sort: {Title: 1}});
+      if(lockedStatus) {
+        return Movies.find({}, {sort: {counter: 1}});
+      } else {
+        return Movies.find({}, {sort: {Title: 1}});  
+      }
+      
     },
     isHistory: function () {
       return false;
