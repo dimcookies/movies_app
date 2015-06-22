@@ -160,7 +160,7 @@ if (Meteor.isClient) {
   Template.home.helpers({
     movies: function () {
       if(lockedStatus) {
-        return Movies.find({}, {sort: {counter: 1}});
+        return Movies.find({}, {sort: {counter: -1}});
       } else {
         return Movies.find({}, {sort: {Title: 1}});  
       }
