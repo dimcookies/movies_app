@@ -93,6 +93,13 @@ if (Meteor.isClient) {
 
     "submit .new-movie": function (event) {
       // This function is called when the new movie form is submitted
+
+      var answer = confirm("Bridgekeeper: Stop. Who would cross the Bridge of Death must answer me these questions three, ere the other side he see.\n\nAre you sure you want to enrage the Bridgekeeper?")
+        if (!answer){
+          event.target.text.value = "";
+          return false;
+        }
+
       var text = event.target.text.value;
 
       Meteor.call('addMovie', text, function(err, data) {
